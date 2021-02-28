@@ -3,3 +3,28 @@ plugins {
 }
 include ':app'
 rootProject.name = "gradle-build-cache-node-replication"
+
+/**
+ * Gradle built-in support for connecting to a remote build cache backend via HTTP.
+ *
+ * The recommended use case from the Gradle team for the build cache is that the CI server
+ * populates the remote build cache with clean builds while developers pull from it and
+ * push to a local build cache.
+ *
+ * The configuration would then look as follows:
+ */
+ext.isPush = "true"
+buildCache {
+    local {
+        enabled = true
+    }
+    remote(HttpBuildCache) {
+        // This is the url of the GCP Compute Engine VM instance of our remote build cache.
+        url = "http://xx.xx.xxx.xxx:5071/cache/"
+//        credentials {
+//            username = "${artifactory_user}"
+//            password = "${artifactory_password}"
+//        }
+        push = isPush
+    }
+}
