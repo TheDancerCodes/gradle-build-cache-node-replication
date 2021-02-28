@@ -19,12 +19,33 @@ buildCache {
         enabled = true
     }
     remote(HttpBuildCache) {
-        // This is the url of the GCP Compute Engine VM instance of our remote build cache.
-        url = "http://xx.xx.xxx.xxx:5071/cache/"
-//        credentials {
-//            username = "${artifactory_user}"
-//            password = "${artifactory_password}"
-//        }
+
+        // Create a variable called buildCacheNodesPropertiesFile and initialize it to your
+        // build-cache-nodes.properties file, in the rootProject folder.
+        def buildCacheNodesPropertiesFile = new File("build-cache-node-config.properties")
+
+        if (!buildCacheNodesPropertiesFile.exists()) {
+            url = "https://gradle-enterprise.your-domain.com/cache/"
+        } else {
+            // Initialize a new Properties() object called buildCacheNodesProperties
+            def buildCacheNodesProperties = new Properties()
+
+            // Load the build-cache-nodes.properties file into the buildCacheNodesProperties object.
+            buildCacheNodesProperties.load(new FileInputStream(buildCacheNodesPropertiesFile))
+
+            if (buildCacheNodesProperties != null
+                    && buildCacheNodesProperties.containsKey('replicated_build_cache_node')) {
+
+                // Set the default build cache node url
+                url = buildCacheNodesProperties['replicated_build_cache_node']
+            } else{
+                // Set the dev specified build cache node url
+                url = buildCacheNodesProperties['default_build_cache_node']
+            }
+        }
+
         push = isPush
+        allowUntrustedServer = true
+        enabled = true
     }
 }

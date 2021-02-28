@@ -37,3 +37,62 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+// region Build Cache Node Replication Setup
+def loadBuildCacheNodes() {
+    def node_title = hasProperty('node') ? node: 'default_node'
+    println "Current Build Cache Node: " + node_title
+
+    def configFile = file('build-cache-node-config.groovy')
+    def config = new ConfigSlurper(node_title).parse(configFile.toURL())
+    project.ext.config = config
+}
+
+task setBuildCacheNode {
+    doLast {
+        if (project.hasProperty('node')) {
+            loadBuildCacheNodes()
+
+            new File(rootDir, "build-cache-node-config.properties").text =
+                    """ $config.nodeTitle \n replicated_build_cache_node=$config.nodeUrl"""
+
+            println "nodeTitle:  $config.nodeTitle"
+            println "nodeUrl:  $config.nodeUrl"
+
+        } else {
+            // empty
+        }
+    }
+}
+
+task setEastAfricaBuildCacheNode() {
+    group = "build setup"
+    description = "Configures the remote build cache url for devs in East Africa"
+
+    doFirst {
+        project.ext.set("node", "east_africa_node")
+    }
+    finalizedBy "setBuildCacheNode"
+}
+
+task setWestAfricaBuildCacheNode() {
+    group = "build setup"
+    description = "Configures the remote build cache url for devs in West Africa"
+
+    doFirst {
+        project.ext.set("node", "west_africa_node")
+    }
+    finalizedBy "setBuildCacheNode"
+}
+
+task setUSABuildCacheNode() {
+    group = "build setup"
+    description = "Configures the remote build cache url for devs in the United States"
+
+    doFirst {
+        project.ext.set("node", "us_west_node")
+    }
+    finalizedBy "setBuildCacheNode"
+}
+
+//endregion

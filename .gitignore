@@ -8,3 +8,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Build Cache Node File
+build-cache-node-config.properties
