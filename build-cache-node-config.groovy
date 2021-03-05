@@ -18,4 +18,9 @@ environments {
         nodeTitle = '# US West Build Cache Node'
         nodeUrl = 'https://us-west.xx.yyy.zzz/cache/'
     }
+
+    honduras_node {
+        nodeTitle = '# Honduras Build Cache Node'
+        nodeUrl = 'https://honduras.xx.yyy.zzz/cache/'
+    }
 }

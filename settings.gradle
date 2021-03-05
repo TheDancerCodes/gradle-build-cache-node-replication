@@ -36,10 +36,10 @@ buildCache {
             if (buildCacheNodesProperties != null
                     && buildCacheNodesProperties.containsKey('replicated_build_cache_node')) {
 
-                // Set the default build cache node url
+                // Set the dev specified build cache node url
                 url = buildCacheNodesProperties['replicated_build_cache_node']
             } else{
-                // Set the dev specified build cache node url
+                // Set the default build cache node url
                 url = buildCacheNodesProperties['default_build_cache_node']
             }
         }

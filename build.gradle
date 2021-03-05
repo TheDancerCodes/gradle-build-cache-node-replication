@@ -95,4 +95,14 @@ task setUSABuildCacheNode() {
     finalizedBy "setBuildCacheNode"
 }
 
+task setHondurasBuildCacheNode() {
+    group = "build setup"
+    description = "Configures the remote build cache url for devs in Honduras"
+
+    doFirst {
+        project.ext.set("node", "honduras_node")
+    }
+    finalizedBy "setBuildCacheNode"
+}
+
 //endregion
